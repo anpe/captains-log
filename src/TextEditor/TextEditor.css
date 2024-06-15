@@ -1,0 +1,30 @@
+#editor {
+  --open-start: calc(var(--sidebar-width) + var(--nav-bar-width));
+  --closed-start: var(--sidebar-width);
+}
+
+.editor {
+  position: fixed;
+  right: 0;
+  transition: left 0.5s;
+  height: 100%;
+  padding: 40px;
+  border-top: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+  background-color: var(--secondary-background-color);
+  color: white;
+  overflow: auto;
+  z-index: 2;
+}
+
+.editor:focus-visible {
+  outline: 0;
+}
+
+.open {
+  left: var(--open-start);
+}
+.closed {
+  left: var(--closed-start);
+}
