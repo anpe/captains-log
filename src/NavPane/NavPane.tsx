@@ -16,7 +16,7 @@ export default function NavPane() {
       <div className="m-2 cursor-default select-none p-2 hover:rounded hover:bg-zinc-700 hover:text-white">
         <h4>
           <strong>
-            {entry.title} {entry.date.toString()} ({entry.id + 1})
+            {entry.title} {entry.createdOn.toString()} ({entry.id + 1})
           </strong>
         </h4>
         <p className="text-sm">{entry.content?.data}</p>
