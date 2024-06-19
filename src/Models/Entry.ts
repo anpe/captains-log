@@ -2,7 +2,7 @@ import { Content } from "./Content";
 
 export interface Entry {
     id: string;
-    date: number;
+    date: string;
     title: string;
     content: Content
 }
