@@ -1,9 +1,11 @@
+import { Dispatch, SetStateAction } from "react";
+
 export default function SettingsButton({
   isSettingsOpen,
   setSettingsOpen,
 }: {
   isSettingsOpen: boolean;
-  setSettingsOpen: Function;
+  setSettingsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   return (
     <>

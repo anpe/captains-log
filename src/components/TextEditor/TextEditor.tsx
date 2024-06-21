@@ -6,7 +6,7 @@ import { useState } from "react";
 import { exampleSetup } from "prosemirror-example-setup";
 import { addListNodes } from "prosemirror-schema-list";
 import { Schema, DOMParser } from "prosemirror-model";
-import placeholder from "../placeholder/placeholder";
+import placeholder from "../../placeholder/placeholder";
 
 const EDITOR_PLACEHOLDER_TEXT = "Write anything...";
 export default function TextEditor({ isOpen }: { isOpen: boolean }) {
@@ -26,7 +26,7 @@ export default function TextEditor({ isOpen }: { isOpen: boolean }) {
         placeholder(EDITOR_PLACEHOLDER_TEXT),
       ],
       schema: schema,
-    })
+    }),
   );
 
   return (

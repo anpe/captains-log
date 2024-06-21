@@ -1,7 +1,7 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { Entry } from "../models/Entry";
-import { NavTestData } from "../NavPane/NavPaneContentTestData";
-import { RootState } from "../stores/store";
+import { NavTestData } from "../components/NavPane/NavPaneContentTestData";
+import { RootState } from "./store";
 
 const initialState: Entry[] = NavTestData;
 

@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import Modal from "../Modal/Modal";
 
 export default function SettingsModal({
@@ -5,7 +6,7 @@ export default function SettingsModal({
   setIsOpen,
 }: {
   isOpen: boolean;
-  setIsOpen: Function;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   return (
     <>

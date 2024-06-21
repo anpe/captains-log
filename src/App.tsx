@@ -1,7 +1,7 @@
-import SideBar from "./SideBar/SideBar";
-import NavPane from "./NavPane/NavPane";
+import SideBar from "./components/SideBar/SideBar";
+import NavPane from "./components/NavPane/NavPane";
 import { useState } from "react";
-import TiptapEditor from "./TextEditor/TipTapEditor";
+import TiptapEditor from "./components/TextEditor/TipTapEditor";
 import { Provider } from "react-redux";
 import { store } from "./stores/store";
 export default function App() {
