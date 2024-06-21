@@ -1,8 +1,8 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "./stores/store";
+import { RootState } from "./store";
 
 const initialState = {
-  currentEntryId: '0',
+  currentEntryId: "0",
 };
 
 const journalSlice = createSlice({

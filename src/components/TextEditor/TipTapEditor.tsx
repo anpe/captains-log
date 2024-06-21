@@ -2,11 +2,11 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 import { Typography } from "@tiptap/extension-typography";
-import { getCurrentEntryId } from "../JournalSlice";
-import { RootState } from "../stores/store";
+import { getCurrentEntryId } from "../../stores/journalSlice";
+import { RootState } from "../../stores/store";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import { Entry } from "../models/Entry";
+import { Entry } from "../../models/Entry";
 
 const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   const state: RootState = useSelector((state: RootState) => state);
