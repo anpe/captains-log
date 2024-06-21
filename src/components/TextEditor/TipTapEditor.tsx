@@ -6,7 +6,7 @@ import { getCurrentEntryId } from "../../stores/journalSlice";
 import { RootState } from "../../stores/store";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import { Entry } from "../../models/Entry";
+import { Entry } from "../../models/entry.model";
 
 const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   const state: RootState = useSelector((state: RootState) => state);

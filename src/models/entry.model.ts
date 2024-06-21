@@ -1,4 +1,4 @@
-import { Content } from "./Content";
+import { Content } from "./content.model";
 
 export interface Entry {
   id: string;

@@ -6,7 +6,7 @@ import NavTabContent from "./NavTabContent";
 import { useDispatch } from "react-redux";
 import { RootState } from "../../stores/store";
 import { setCurrentEntry } from "../../stores/journalSlice";
-import { Entry } from "../../models/Entry";
+import { Entry } from "../../models/entry.model";
 
 export default function NavPane() {
   const [activeTab, setActiveTab] = useState("");

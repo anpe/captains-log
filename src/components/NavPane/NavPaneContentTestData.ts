@@ -1,4 +1,4 @@
-import { Entry } from "../../models/Entry";
+import { Entry } from "../../models/entry.model";
 
 export const NavTestData: Entry[] = [
   {
