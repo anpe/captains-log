@@ -3,30 +3,41 @@ import NavPaneBar from "./NavPaneBar";
 import NavPaneBarButton from "./NavPaneBarButton";
 import NavPaneContent from "./NavPaneContent";
 import NavTabContent from "./NavTabContent";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useDispatch } from "react-redux";
+import { RootState } from "../stores/store";
 import { setCurrentEntry } from "../JournalSlice";
+import { Entry } from "../models/Entry";
 
 export default function NavPane() {
   const [activeTab, setActiveTab] = useState("");
-  const entries = useSelector((state: RootState) => state.entries);
-  const dispatch = useDispatch()
-  const items = entries.map((entry) => (
-    <li key={entry.id} onClick={() => dispatch(setCurrentEntry(entry.id))}>
-      <div className="m-2 cursor-default select-none p-2 hover:rounded hover:bg-zinc-700 hover:text-white">
-        <h4>
-          <strong>
-            {entry.title} {entry.createdOn.toString()} ({entry.id + 1})
-          </strong>
-        </h4>
-        <p className="text-sm">{entry.content?.data}</p>
-      </div>
-    </li>
-  ));
+  // = useSelector((state: RootState) => state.entries);
+  const dispatch = useDispatch();
+  const [items, setItems] = useState<JSX.Element[]>([]);
+
+  const renderEntries = (entries: Entry[]) => {
+    return (
+      entries?.map((entry) => (
+        <li key={entry.id} onClick={() => dispatch(setCurrentEntry(entry.id))}>
+          <div className="m-2 cursor-default select-none p-2 hover:rounded hover:bg-zinc-700 hover:text-white">
+            <h4>
+              <strong>
+                {entry.title} {entry.createdOn?.toString()} ({entry.id + 1})
+              </strong>
+            </h4>
+            <p className="text-sm">{entry.content}</p>
+          </div>
+        </li>
+      )) || []
+    );
+  };
 
   const defaultTab = "listView";
+
   useEffect(() => {
     setActiveTab(defaultTab);
+    window.databaseAPI.getEntryList().then((entryList: Entry[]) => {
+      setItems(renderEntries(entryList));
+    });
   }, [defaultTab]);
 
   return (

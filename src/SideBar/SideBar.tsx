@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import NavPaneButton from "../NavPane/NavPaneButton";
 import SettingsButton from "../Settings/SettingsButton";
 import SettingsModal from "../Settings/SettingsModal";
@@ -8,9 +8,9 @@ export default function SideBar({
   setIsOpen,
 }: {
   isOpen: boolean;
-  setIsOpen: Function;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  let [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   return (
     <>

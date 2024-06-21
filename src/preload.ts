@@ -2,7 +2,7 @@
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    electronAPI: any;
+    databaseAPI: any;
   }
 }
 import { ipcRenderer } from "electron";
@@ -10,6 +10,14 @@ import { ipcRenderer } from "electron";
 import { contextBridge } from "electron/renderer";
 
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
-contextBridge.exposeInMainWorld('electronAPI', {
-  test: () => {console.log("XXXXXXX"); ipcRenderer.send('test')}
-});
+
+const databaseAPI = {
+  getEntryList: () => {
+    return ipcRenderer.invoke("databaseAPI:getEntryList");
+  },
+  getEntry: (id: string) => {
+    return ipcRenderer.invoke("databaseAPI:getEntry", id);
+  },
+};
+contextBridge.exposeInMainWorld("databaseAPI", databaseAPI);
+

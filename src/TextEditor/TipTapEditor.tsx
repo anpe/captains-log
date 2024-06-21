@@ -2,27 +2,31 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 import { Typography } from "@tiptap/extension-typography";
-import { getEntry } from "../Entry/EntrySlice";
 import { getCurrentEntryId } from "../JournalSlice";
-import { RootState, store } from "../store";
+import { RootState } from "../stores/store";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { Entry } from "../models/Entry";
 
 const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   const state: RootState = useSelector((state: RootState) => state);
 
   /* tslint:disable-next-line */
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  const entry = getEntry(state, getCurrentEntryId(state)); // @ts-ignore
-  const content = entry?.content?.data || "";
   const editor = useEditor({
     extensions: [StarterKit, Typography, Markdown],
-    content: content,
+    content: "",
   });
 
   useEffect(() => {
-    editor?.commands.setContent(content);
-  }, [editor, content]);
+    window.databaseAPI
+      .getEntry(getCurrentEntryId(state))
+      .then((result: Entry) => {
+        if (result) {
+          editor?.commands.setContent(result?.content);
+        }
+      });
+  }, [editor, getCurrentEntryId(state)]);
 
   const markdownOutput = editor?.storage.markdown.getMarkdown();
   console.log(markdownOutput);

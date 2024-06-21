@@ -23,19 +23,18 @@ const createWindow = (): void => {
     frame: false,
   });
 
-  ipcMain.on("test", () => {
-    console.log("NOOOOOOODDD11111111111111EEE");
-    database.addEntry("TEST TITLE", { data: "Test content" });
-
-    database.addEntry("TEST TITLE 2", { data: "Test 2 content" });
-    database.getEntryList();
-  });
-
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  ipcMain.handle("databaseAPI:getEntryList", () => {
+    return database.getEntryList();
+  });
+  ipcMain.handle("databaseAPI:getEntry", (event, id: string) => {
+    return database.getEntry(id);
+  });
 };
 
 // This method will be called when Electron has finished

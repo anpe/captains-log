@@ -3,7 +3,7 @@ import NavPane from "./NavPane/NavPane";
 import { useState } from "react";
 import TiptapEditor from "./TextEditor/TipTapEditor";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { store } from "./stores/store";
 export default function App() {
   const [isOpen, setIsOpen] = useState(false);
   return (
