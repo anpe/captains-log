@@ -4,13 +4,11 @@ import NavPaneBarButton from "./NavPaneBarButton";
 import NavPaneContent from "./NavPaneContent";
 import NavTabContent from "./NavTabContent";
 import { useDispatch } from "react-redux";
-import { RootState } from "../../stores/store";
 import { setCurrentEntry } from "../../stores/journalSlice";
 import { Entry } from "../../models/entry.model";
 
 export default function NavPane() {
   const [activeTab, setActiveTab] = useState("");
-  // = useSelector((state: RootState) => state.entries);
   const dispatch = useDispatch();
   const [items, setItems] = useState<JSX.Element[]>([]);
 
@@ -41,7 +39,7 @@ export default function NavPane() {
   }, [defaultTab]);
 
   return (
-    <>
+    <div className="flex flex-col">
       <NavPaneBar>
         <NavPaneBarButton
           tabId="listView"
@@ -99,6 +97,6 @@ export default function NavPane() {
           CALENDAR
         </NavTabContent>
       </NavPaneContent>
-    </>
+    </div>
   );
 }

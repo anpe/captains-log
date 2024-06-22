@@ -1,9 +1,11 @@
+import { Dispatch, SetStateAction } from "react";
+
 export default function NavPaneButton({
   isOpen,
   setIsOpen,
 }: {
   isOpen: boolean;
-  setIsOpen: Function;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   return (
     <>
@@ -14,7 +16,7 @@ export default function NavPaneButton({
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="hover:white h-7 w-7 hover:rounded hover:bg-zinc-700"
+          className="hover:white h-6 w-6 hover:rounded hover:bg-zinc-700"
           onClick={setIsOpen.bind(null, !isOpen)}
         >
           <path

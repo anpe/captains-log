@@ -76,3 +76,22 @@ code {
 .ProseMirror:focus-visible {
   outline: 0;
 }
+
+::-webkit-scrollbar-thumb {
+  background: #4d7fff;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(113 113 122);
+  border-radius: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 5px;
+}
