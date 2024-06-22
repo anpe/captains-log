@@ -8,7 +8,7 @@ export default function App() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Provider store={store}>
-      <div id="app" className="flex h-full">
+      <div id="app" className="flex h-full flex-row">
         <SideBar isOpen={isOpen} setIsOpen={setIsOpen}></SideBar>
         <NavPane></NavPane>
         <TiptapEditor isOpen={isOpen}></TiptapEditor>

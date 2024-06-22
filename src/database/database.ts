@@ -1,6 +1,6 @@
 import Database, { Statement } from "better-sqlite3";
-import { Content } from "../models/Content";
-import { Entry } from "../models/Entry";
+import { Content } from "../models/content.model";
+import { Entry } from "../models/entry.model";
 const db = new Database("captains-log.db");
 db.pragma("journal_mode = WAL");
 db.prepare(

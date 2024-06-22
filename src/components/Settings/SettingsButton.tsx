@@ -16,7 +16,7 @@ export default function SettingsButton({
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="h-7 w-7 rounded hover:bg-zinc-700 hover:stroke-white"
+          className="h-6 w-6 rounded hover:bg-zinc-700 hover:stroke-white"
           onClick={() => {
             setSettingsOpen(!isSettingsOpen);
           }}
