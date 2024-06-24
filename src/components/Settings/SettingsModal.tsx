@@ -9,12 +9,8 @@ export default function SettingsModal({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   return (
-    <>
-      <Modal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        content={<div>Tjhoasdfa</div>}
-      ></Modal>
-    </>
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <div>This is sample content for the settings modal</div>
+    </Modal>
   );
 }
