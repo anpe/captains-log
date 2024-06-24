@@ -1,13 +1,13 @@
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import "./Modal.css";
 export default function Modal({
   isOpen,
   setIsOpen,
-  content,
+  children,
 }: {
   isOpen: boolean;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  setIsOpen: Function;
-  content: JSX.Element;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  children: ReactNode;
 }) {
   function onModalOverlayClick(): void {
     if (isOpen) {
@@ -28,7 +28,7 @@ export default function Modal({
           isOpen ? "block" : "hidden"
         }`}
       >
-        {content}
+        {children}
       </div>
     </>
   );
