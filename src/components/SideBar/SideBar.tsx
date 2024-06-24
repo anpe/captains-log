@@ -14,7 +14,7 @@ export default function SideBar({
 
   return (
     <>
-      <div className="z-10 h-full w-11 bg-zinc-800 pb-2 pt-2">
+      <div className="z-10 flex h-full w-11 flex-col bg-zinc-800 pb-2 pt-2">
         <NavPaneButton isOpen={isOpen} setIsOpen={setIsOpen}></NavPaneButton>
         <SettingsButton
           isSettingsOpen={isSettingsOpen}
