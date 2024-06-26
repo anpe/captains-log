@@ -6,11 +6,13 @@ import { getCurrentEntryId } from "../../stores/journalSlice";
 import { RootState } from "../../stores/store";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import { Entry } from "../../models/entry.model";
+import { Entry as EntryType } from "../../models/entry.model";
+import { current } from "@reduxjs/toolkit";
 
 const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   const state: RootState = useSelector((state: RootState) => state);
-
+  const currentEntryId = getCurrentEntryId(state);
+  let saveInterval: NodeJS.Timer;
   /* tslint:disable-next-line */
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   const editor = useEditor({
@@ -19,17 +21,37 @@ const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   });
 
   useEffect(() => {
+    console.log("CURRENT", currentEntryId);
     window.databaseAPI
-      .getEntry(getCurrentEntryId(state))
-      .then((result: Entry) => {
+      .getEntry(currentEntryId)
+      .then((result: EntryType) => {
         if (result) {
           editor?.commands.setContent(result?.content);
+          window.databaseAPI.updateEntryContent(
+            currentEntryId,
+            result?.content,
+          );
         }
       });
-  }, [editor, getCurrentEntryId(state)]);
+  }, [editor, currentEntryId]);
 
-  const markdownOutput = editor?.storage.markdown.getMarkdown();
-  console.log(markdownOutput);
+  useEffect(() => {
+    console.log("INTERVAL SddET");
+    saveInterval = setInterval(() => {
+      console.log("Entry Saved!!!!!!!", currentEntryId);
+      console.log(editor?.getText());
+      window.databaseAPI.updateEntryContent(currentEntryId, editor?.getText());
+    }, 10000);
+  }, [editor, currentEntryId]);
+
+  useEffect(
+    () => () => {
+      clearInterval(saveInterval);
+    },
+    [],
+  );
+
+  // const markdownOutput = editor?.storage.markdown.getMarkdown();
 
   return (
     <EditorContent

@@ -18,6 +18,9 @@ const databaseAPI = {
   getEntry: (id: string) => {
     return ipcRenderer.invoke("databaseAPI:getEntry", id);
   },
+  updateEntryContent: (id: string, content: string) => {
+    return ipcRenderer.send("databaseAPI:updateEntryContent", id, content);
+  },
 };
 contextBridge.exposeInMainWorld("databaseAPI", databaseAPI);
 

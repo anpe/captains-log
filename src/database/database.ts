@@ -1,6 +1,6 @@
 import Database, { Statement } from "better-sqlite3";
 import { Content } from "../models/content.model";
-import { Entry } from "../models/entry.model";
+import { Entry as EntryType } from "../models/entry.model";
 const db = new Database("captains-log.db");
 db.pragma("journal_mode = WAL");
 db.prepare(
@@ -23,17 +23,17 @@ const addEntry = (title: string, content: Content): Statement => {
   return statement;
 };
 
-const getEntryList = (): Entry[] => {
+const getEntryList = (): EntryType[] => {
   const entryList = db.prepare("SELECT *, content FROM entries").all();
   console.debug(`Retrieved EntryList: ${entryList}`);
-  return entryList as Entry[];
+  return entryList as EntryType[];
 };
 
-const getEntry = (id: string): Entry => {
+const getEntry = (id: string): EntryType => {
   const statement = db.prepare("SELECT * FROM entries WHERE id = ?");
   const row = statement.get(id);
-  console.debug(`Retrieved Entry: ${row}`);
-  return row as Entry;
+  console.debug(`Retrieved Entry: ${JSON.stringify(row)}`);
+  return row as EntryType;
 };
 
 const updateEntryTitle = (id: string, updatedTitle: string) => {
@@ -43,9 +43,10 @@ const updateEntryTitle = (id: string, updatedTitle: string) => {
 };
 
 const updateEntryContent = (id: string, updatedContent: string) => {
+  console.log("SAVING Edddntry", id, updatedContent);
   const query = "UPDATE entries SET content = ? WHERE id = ?";
   const statement = db.prepare(query);
-  statement.run(id, updatedContent);
+  statement.run(updatedContent, id);
 };
 
 export default {

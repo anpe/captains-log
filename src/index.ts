@@ -33,9 +33,19 @@ const createWindow = (): void => {
   ipcMain.handle("databaseAPI:getEntryList", () => {
     return database.getEntryList();
   });
-  ipcMain.handle("databaseAPI:getEntry", (event, id: string) => {
-    return database.getEntry(id);
-  });
+  ipcMain.handle(
+    "databaseAPI:getEntry",
+    (event: Electron.IpcMainInvokeEvent, id: string) => {
+      return database.getEntry(id);
+    },
+  );
+
+  ipcMain.on(
+    "databaseAPI:updateEntryContent",
+    (event: Electron.IpcMainEvent, id: string, content: string) => {
+      return database.updateEntryContent(id, content);
+    },
+  );
 };
 
 // This method will be called when Electron has finished

@@ -1,3 +1,3 @@
-export interface Content {
-    data : string
-}
+export type Content = {
+  data: string;
+};
