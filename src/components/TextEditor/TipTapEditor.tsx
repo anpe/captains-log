@@ -2,46 +2,81 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 import { Typography } from "@tiptap/extension-typography";
+import { Document } from "@tiptap/extension-document";
+import { Heading } from "@tiptap/extension-heading";
+import { Placeholder } from "@tiptap/extension-placeholder";
 import { getCurrentEntryId } from "../../stores/journalSlice";
 import { RootState } from "../../stores/store";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Entry as EntryType } from "../../models/entry.model";
-import { current } from "@reduxjs/toolkit";
 
 const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   const state: RootState = useSelector((state: RootState) => state);
   const currentEntryId = getCurrentEntryId(state);
-  let saveInterval: NodeJS.Timer;
-  /* tslint:disable-next-line */
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  const [saveInterval, setSaveInterval] = useState<NodeJS.Timer>();
+
+  const DocumentWithTitle = Document.extend({
+    content: "title block+",
+  });
+
+  const Title = Heading.extend({
+    name: "title",
+    group: "title",
+    parseHTML: () => [{ tag: "h1:first-child" }],
+  }).configure({ levels: [1] });
+
   const editor = useEditor({
-    extensions: [StarterKit, Typography, Markdown],
+    extensions: [
+      StarterKit.configure({
+        document: false,
+        heading: false,
+      }),
+      DocumentWithTitle,
+      Title,
+      Heading,
+      Typography,
+      Markdown,
+      Placeholder.configure({
+        showOnlyCurrent: false,
+        placeholder: ({ node }) => {
+          if (node.type.name === "title") {
+            return "What's the title?";
+          }
+
+          return "What's on your mind?";
+        },
+      }),
+    ],
     content: "",
   });
 
   useEffect(() => {
-    console.log("CURRENT", currentEntryId);
-    window.databaseAPI
-      .getEntry(currentEntryId)
-      .then((result: EntryType) => {
-        if (result) {
-          editor?.commands.setContent(result?.content);
-          window.databaseAPI.updateEntryContent(
-            currentEntryId,
-            result?.content,
-          );
+    window.databaseAPI.getEntry(currentEntryId).then((result: EntryType) => {
+      if (result) {
+        let parsedJSON;
+        try {
+          parsedJSON = JSON.parse(result?.content);
+        } catch {
+          console.log("could not parse");
         }
-      });
+        editor?.commands.setContent(parsedJSON || result?.content);
+      }
+    });
   }, [editor, currentEntryId]);
 
   useEffect(() => {
-    console.log("INTERVAL SddET");
-    saveInterval = setInterval(() => {
-      console.log("Entry Saved!!!!!!!", currentEntryId);
-      console.log(editor?.getText());
-      window.databaseAPI.updateEntryContent(currentEntryId, editor?.getText());
-    }, 10000);
+    clearInterval(saveInterval);
+    setSaveInterval(
+      setInterval(() => {
+        if (currentEntryId !== null) {
+          window.databaseAPI.updateEntryContent(
+            currentEntryId,
+            JSON.stringify(editor?.getJSON()) || "",
+          );
+        }
+      }, 10000),
+    );
   }, [editor, currentEntryId]);
 
   useEffect(
@@ -51,7 +86,8 @@ const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
     [],
   );
 
-  // const markdownOutput = editor?.storage.markdown.getMarkdown();
+  const markdownOutput = editor?.storage.markdown.getMarkdown();
+  console.log(markdownOutput);
 
   return (
     <EditorContent

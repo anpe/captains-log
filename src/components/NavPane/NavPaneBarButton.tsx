@@ -10,15 +10,13 @@ export default function NavPaneBarButton({
   children: ReactNode;
 }) {
   return (
-    <>
-      <div className="flex flex-1 justify-center">
-        <button
-          className="hover:white cursor-default p-2 text-white hover:rounded hover:bg-zinc-700"
-          onClick={ setActiveTab.bind(null, tabId)}
-        >
-          {children}
-        </button>
-      </div>
-    </>
+    <div className="flex flex-1 justify-center">
+      <button
+        className="hover:white cursor-default p-2 text-white hover:rounded hover:bg-zinc-700"
+        onClick={setActiveTab.bind(null, tabId)}
+      >
+        {children}
+      </button>
+    </div>
   );
 }

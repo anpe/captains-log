@@ -36,6 +36,7 @@ const getEntry = (id: string): EntryType => {
   return row as EntryType;
 };
 
+// TODO: Title field may not be needed
 const updateEntryTitle = (id: string, updatedTitle: string) => {
   const query = "UPDATE entries SET title = ? WHERE id = ?";
   const statement = db.prepare(query);
@@ -43,7 +44,6 @@ const updateEntryTitle = (id: string, updatedTitle: string) => {
 };
 
 const updateEntryContent = (id: string, updatedContent: string) => {
-  console.log("SAVING Edddntry", id, updatedContent);
   const query = "UPDATE entries SET content = ? WHERE id = ?";
   const statement = db.prepare(query);
   statement.run(updatedContent, id);

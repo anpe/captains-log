@@ -10,8 +10,6 @@ export default function NavTabContent({
   children: ReactNode;
 }) {
   return (
-    <>
-      <div className={tabId === activeTab ? "block" : "hidden"}>{children}</div>
-    </>
+    <div className={tabId === activeTab ? "block" : "hidden"}>{children}</div>
   );
 }

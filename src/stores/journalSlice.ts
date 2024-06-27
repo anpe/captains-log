@@ -2,7 +2,7 @@ import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
 const initialState = {
-  currentEntryId: "0",
+  currentEntryId: null,
 };
 
 const journalSlice = createSlice({
