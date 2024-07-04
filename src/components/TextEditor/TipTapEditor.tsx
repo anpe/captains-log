@@ -1,4 +1,4 @@
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 import { Typography } from "@tiptap/extension-typography";
@@ -9,13 +9,16 @@ import { getCurrentEntryId } from "../../stores/journalSlice";
 import { RootState } from "../../stores/store";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Entry as EntryType } from "../../models/entry.model";
+import { Entry as EntryType } from "../../types/entry.type";
 
 const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   const state: RootState = useSelector((state: RootState) => state);
   const currentEntryId = getCurrentEntryId(state);
   const [saveInterval, setSaveInterval] = useState<NodeJS.Timer>();
 
+  const getTitle = (editor: Editor | null) => {
+    return "MockTitle";
+  };
   const DocumentWithTitle = Document.extend({
     content: "title block+",
   });
@@ -62,21 +65,19 @@ const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
         }
         editor?.commands.setContent(parsedJSON || result?.content);
       }
+      clearInterval(saveInterval);
+      setSaveInterval(
+        setInterval(() => {
+          if (currentEntryId !== null) {
+            window.databaseAPI.updateEntry({
+              id: currentEntryId,
+              title: getTitle(editor),
+              content: JSON.stringify(editor?.getJSON()),
+            });
+          }
+        }, 10000),
+      );
     });
-  }, [editor, currentEntryId]);
-
-  useEffect(() => {
-    clearInterval(saveInterval);
-    setSaveInterval(
-      setInterval(() => {
-        if (currentEntryId !== null) {
-          window.databaseAPI.updateEntryContent(
-            currentEntryId,
-            JSON.stringify(editor?.getJSON()) || "",
-          );
-        }
-      }, 10000),
-    );
   }, [editor, currentEntryId]);
 
   useEffect(
@@ -87,7 +88,6 @@ const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   );
 
   const markdownOutput = editor?.storage.markdown.getMarkdown();
-  console.log(markdownOutput);
 
   return (
     <EditorContent

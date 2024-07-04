@@ -1,5 +1,5 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
-import { Entry as EntryType } from "../models/entry.model";
+import { Entry as EntryType } from "../types/entry.type";
 import { NavTestData } from "../components/NavPane/NavPaneContentTestData";
 import { RootState } from "./store";
 

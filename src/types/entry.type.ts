@@ -5,3 +5,5 @@ export type Entry = {
   title: string;
   content: string;
 };
+
+export type EntryUpdate = Partial<Entry> & Pick<Entry, "id">;

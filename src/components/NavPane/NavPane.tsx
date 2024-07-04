@@ -3,7 +3,7 @@ import NavPaneBar from "./NavPaneBar";
 import NavPaneBarButton from "./NavPaneBarButton";
 import NavPaneContent from "./NavPaneContent";
 import NavTabContent from "./NavTabContent";
-import { Entry as EntryType } from "../../models/entry.model";
+import { Entry as EntryType } from "../../types/entry.type";
 import EntryList from "../EntryList/EntryList";
 
 export default function NavPane() {

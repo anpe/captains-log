@@ -1,4 +1,4 @@
-import { Entry as EntryType } from "../../models/entry.model";
+import { Entry as EntryType } from "../../types/entry.type";
 
 export const NavTestData: EntryType[] = [
   {
