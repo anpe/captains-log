@@ -5,19 +5,25 @@ import NavPaneContent from "./NavPaneContent";
 import NavTabContent from "./NavTabContent";
 import { Entry as EntryType } from "../../types/entry.type";
 import EntryList from "../EntryList/EntryList";
+import { getCurrentEntryId, getEntryList, setEntryList } from "../../stores/journalSlice";
+import { RootState } from "../../stores/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function NavPane() {
   const [activeTab, setActiveTab] = useState("");
-  const [entryList, setEntryList] = useState<EntryType[]>([]);
+  const state: RootState = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
+  const entryList = getEntryList(state);
+  const currentEntryId = getCurrentEntryId(state);
 
   const defaultTab = "listView";
 
   useEffect(() => {
     setActiveTab(defaultTab);
     window.databaseAPI.getEntryList().then((entryList: EntryType[]) => {
-      setEntryList(entryList);
+      dispatch(setEntryList(entryList));
     });
-  }, [defaultTab]);
+  }, [defaultTab, currentEntryId]);
 
   return (
     <div className="flex flex-col">
@@ -67,7 +73,11 @@ export default function NavPane() {
       </NavPaneBar>
       <NavPaneContent>
         <NavTabContent tabId="listView" activeTab={activeTab}>
-          <EntryList entries={entryList}></EntryList>
+          {entryList.length ? (
+            <EntryList entryListItems={entryList}></EntryList>
+          ) : (
+            "No Entries"
+          )}
         </NavTabContent>
         <NavTabContent tabId="calendarView" activeTab={activeTab}>
           CALENDAR

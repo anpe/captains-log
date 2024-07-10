@@ -27,7 +27,6 @@ const getEntryList = (): EntryType[] => {
   const entryList = db
     .prepare("SELECT id, createdOn, title FROM entries")
     .all();
-  console.debug(`Retrieved EntryList: ${entryList}`);
   return entryList as EntryType[];
 };
 

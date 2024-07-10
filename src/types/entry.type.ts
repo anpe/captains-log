@@ -3,7 +3,9 @@ export type Entry = {
   createdOn: string;
   updatedOn: string;
   title: string;
-  content: string;
+  content?: string;
 };
 
 export type EntryUpdate = Partial<Entry> & Pick<Entry, "id">;
+
+export type EntryListItem = Partial<Entry> & Pick<Entry, "id" | "createdOn" | "title">;

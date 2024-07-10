@@ -58,6 +58,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@tiptap/extension-highlight": "^2.4.0",
+    "@tiptap/extension-placeholder": "^2.4.0",
     "@tiptap/extension-typography": "^2.0.4",
     "@tiptap/pm": "^2.0.4",
     "@tiptap/react": "^2.0.4",

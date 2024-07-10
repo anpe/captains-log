@@ -1,24 +1,27 @@
-import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import { useEditor, EditorContent, Editor, JSONContent } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 import { Typography } from "@tiptap/extension-typography";
 import { Document } from "@tiptap/extension-document";
 import { Heading } from "@tiptap/extension-heading";
 import { Placeholder } from "@tiptap/extension-placeholder";
-import { getCurrentEntryId } from "../../stores/journalSlice";
+import {
+  clearSaveInterval,
+  getCurrentEntryId,
+  setEntryList,
+  setSaveInterval,
+} from "../../stores/journalSlice";
 import { RootState } from "../../stores/store";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { Entry as EntryType } from "../../types/entry.type";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { Entry as EntryType, EntryListItem } from "../../types/entry.type";
+import { ENTRY_SAVE_INTERVAL } from "../../constants/constants";
 
 const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   const state: RootState = useSelector((state: RootState) => state);
   const currentEntryId = getCurrentEntryId(state);
-  const [saveInterval, setSaveInterval] = useState<NodeJS.Timer>();
+  const dispatch = useDispatch();
 
-  const getTitle = (editor: Editor | null) => {
-    return "MockTitle";
-  };
   const DocumentWithTitle = Document.extend({
     content: "title block+",
   });
@@ -55,39 +58,75 @@ const TiptapEditor = ({ isOpen }: { isOpen: boolean }) => {
   });
 
   useEffect(() => {
-    window.databaseAPI.getEntry(currentEntryId).then((result: EntryType) => {
+    loadEntry(editor, currentEntryId);
+    startSaveInterval(editor, currentEntryId);
+
+    return () => {
+      dispatch(clearSaveInterval());
+      saveEntry(currentEntryId, editor);
+    };
+  }, [currentEntryId]);
+
+  const saveEntry = (id: string, editor: Editor | null) => {
+    const title = getTitle(editor?.getJSON());
+    window.databaseAPI.updateEntry({
+      id: id,
+      title: title,
+      content: JSON.stringify(editor?.getJSON()),
+    });
+  };
+
+  const startSaveInterval = (
+    editor: Editor | null,
+    entryId: string,
+  ) => {
+    if (entryId) {
+      dispatch(
+        setSaveInterval(
+          setInterval(() => {
+            saveEntry(entryId, editor);
+          }, ENTRY_SAVE_INTERVAL),
+        ),
+      );
+    }
+  };
+
+  const loadEntry = (editor: Editor | null, id: string) => {
+    window.databaseAPI.getEntry(id).then((result: EntryType) => {
       if (result) {
         let parsedJSON;
         try {
-          parsedJSON = JSON.parse(result?.content);
+          parsedJSON = JSON.parse(result?.content || "");
         } catch {
           console.log("could not parse");
         }
         editor?.commands.setContent(parsedJSON || result?.content);
       }
-      clearInterval(saveInterval);
-      setSaveInterval(
-        setInterval(() => {
-          if (currentEntryId !== null) {
-            window.databaseAPI.updateEntry({
-              id: currentEntryId,
-              title: getTitle(editor),
-              content: JSON.stringify(editor?.getJSON()),
-            });
-          }
-        }, 10000),
-      );
     });
-  }, [editor, currentEntryId]);
+  };
 
-  useEffect(
-    () => () => {
-      clearInterval(saveInterval);
-    },
-    [],
-  );
+  const getTitle = (node: JSONContent | undefined) => {
+    const titleNode = node?.content?.find(
+      (node: JSONContent) => node.type === "title",
+    );
+    const titleTextNode = titleNode?.content?.find(
+      (node: JSONContent) => node.type === "text",
+    );
+    return titleTextNode?.text || "";
+  };
 
-  const markdownOutput = editor?.storage.markdown.getMarkdown();
+  const updateEntryList = (entryList: EntryListItem[], title: string) => {
+    const updatedEntryList = entryList.map((entry) => {
+      if (entry.id === currentEntryId) {
+        return {
+          ...entry,
+          title,
+        };
+      }
+      return entry;
+    });
+    dispatch(setEntryList(updatedEntryList));
+  };
 
   return (
     <EditorContent
