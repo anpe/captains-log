@@ -1,13 +1,17 @@
 // See the Electron documentation for details on how to use preload scripts:
 declare global {
   interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    databaseAPI: any;
+    databaseAPI: {
+      getEntryList: () => Promise<any>;
+      getEntry: (id: string) => Promise<any>;
+      updateEntry: (entry: EntryUpdate) => void;
+    };
   }
 }
 import { ipcRenderer } from "electron";
 // eslint-disable-next-line import/no-unresolved
 import { contextBridge } from "electron/renderer";
+import { EntryUpdate } from "./types/entry.type";
 
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
@@ -17,6 +21,9 @@ const databaseAPI = {
   },
   getEntry: (id: string) => {
     return ipcRenderer.invoke("databaseAPI:getEntry", id);
+  },
+  updateEntry: (entry: EntryUpdate) => {
+    return ipcRenderer.send("databaseAPI:updateEntry", entry);
   },
 };
 contextBridge.exposeInMainWorld("databaseAPI", databaseAPI);

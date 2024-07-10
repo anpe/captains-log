@@ -95,3 +95,16 @@ code {
   background: white;
   border-radius: 5px;
 }
+
+.tiptap p.is-empty:nth-child(2):last-child::before,
+.tiptap h1.is-empty:first-child::before {
+  color: #8d8e8e;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap h1:first-child {
+  margin-bottom: 2rem;
+}

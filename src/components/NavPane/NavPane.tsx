@@ -3,40 +3,27 @@ import NavPaneBar from "./NavPaneBar";
 import NavPaneBarButton from "./NavPaneBarButton";
 import NavPaneContent from "./NavPaneContent";
 import NavTabContent from "./NavTabContent";
-import { useDispatch } from "react-redux";
-import { setCurrentEntry } from "../../stores/journalSlice";
-import { Entry } from "../../models/entry.model";
+import { Entry as EntryType } from "../../types/entry.type";
+import EntryList from "../EntryList/EntryList";
+import { getCurrentEntryId, getEntryList, setEntryList } from "../../stores/journalSlice";
+import { RootState } from "../../stores/store";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function NavPane() {
   const [activeTab, setActiveTab] = useState("");
+  const state: RootState = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
-  const [items, setItems] = useState<JSX.Element[]>([]);
-
-  const renderEntries = (entries: Entry[]) => {
-    return (
-      entries?.map((entry) => (
-        <li key={entry.id} onClick={() => dispatch(setCurrentEntry(entry.id))}>
-          <div className="m-2 cursor-default select-none p-2 hover:rounded hover:bg-zinc-700 hover:text-white">
-            <h4>
-              <strong>
-                {entry.title} {entry.createdOn?.toString()} ({entry.id + 1})
-              </strong>
-            </h4>
-            <p className="text-sm">{entry.content}</p>
-          </div>
-        </li>
-      )) || []
-    );
-  };
+  const entryList = getEntryList(state);
+  const currentEntryId = getCurrentEntryId(state);
 
   const defaultTab = "listView";
 
   useEffect(() => {
     setActiveTab(defaultTab);
-    window.databaseAPI.getEntryList().then((entryList: Entry[]) => {
-      setItems(renderEntries(entryList));
+    window.databaseAPI.getEntryList().then((entryList: EntryType[]) => {
+      dispatch(setEntryList(entryList));
     });
-  }, [defaultTab]);
+  }, [defaultTab, currentEntryId]);
 
   return (
     <div className="flex flex-col">
@@ -86,12 +73,11 @@ export default function NavPane() {
       </NavPaneBar>
       <NavPaneContent>
         <NavTabContent tabId="listView" activeTab={activeTab}>
-          <ul>
-            <div className="m-2 p-2 text-xs">
-              <strong>1 WEEK AGO</strong>
-            </div>
-            {items}
-          </ul>
+          {entryList.length ? (
+            <EntryList entryListItems={entryList}></EntryList>
+          ) : (
+            "No Entries"
+          )}
         </NavTabContent>
         <NavTabContent tabId="calendarView" activeTab={activeTab}>
           CALENDAR
