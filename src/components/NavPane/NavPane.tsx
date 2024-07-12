@@ -5,7 +5,7 @@ import NavPaneContent from "./NavPaneContent";
 import NavTabContent from "./NavTabContent";
 import { Entry as EntryType } from "../../types/entry.type";
 import EntryList from "../EntryList/EntryList";
-import { getCurrentEntryId, getEntryList, setEntryList } from "../../stores/journalSlice";
+import { getActiveEntryId, getEntryList, setEntryList } from "../../stores/journalSlice";
 import { RootState } from "../../stores/store";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,7 +14,7 @@ export default function NavPane() {
   const state: RootState = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
   const entryList = getEntryList(state);
-  const currentEntryId = getCurrentEntryId(state);
+  const activeEntryId = getActiveEntryId(state);
 
   const defaultTab = "listView";
 
@@ -23,7 +23,7 @@ export default function NavPane() {
     window.databaseAPI.getEntryList().then((entryList: EntryType[]) => {
       dispatch(setEntryList(entryList));
     });
-  }, [defaultTab, currentEntryId]);
+  }, [activeEntryId]);
 
   return (
     <div className="flex flex-col">

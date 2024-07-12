@@ -3,12 +3,12 @@ import { RootState } from "./store";
 import { EntryListItem } from "../types/entry.type";
 
 type InitialState = {
-  currentEntryId: string;
+  activeEntryId: string;
   entryList: EntryListItem[];
   saveInterval?: NodeJS.Timer;
 };
 const initialState: InitialState = {
-  currentEntryId: "",
+  activeEntryId: "",
   entryList: [],
 };
 
@@ -17,7 +17,7 @@ const journalSlice = createSlice({
   initialState,
   reducers: {
     setCurrentEntryId(state, action) {
-      state.currentEntryId = action.payload;
+      state.activeEntryId = action.payload;
     },
     setEntryList(state, action) {
       state.entryList = action.payload;
@@ -41,9 +41,9 @@ export const {
 
 export default journalSlice.reducer;
 
-export const getCurrentEntryId = createSelector(
+export const getActiveEntryId = createSelector(
   (state: RootState) => state.journal,
-  (journal) => journal.currentEntryId,
+  (journal) => journal.activeEntryId,
 );
 
 export const getEntryList = createSelector(
@@ -51,7 +51,3 @@ export const getEntryList = createSelector(
   (journal) => journal.entryList,
 );
 
-export const getSaveInterval = createSelector(
-  (state: RootState) => state.journal,
-  (journal) => journal.saveInterval,
-);
