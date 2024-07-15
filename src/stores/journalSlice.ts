@@ -16,7 +16,7 @@ const journalSlice = createSlice({
   name: "journal",
   initialState,
   reducers: {
-    setCurrentEntryId(state, action) {
+    setActiveEntryId(state, action) {
       state.activeEntryId = action.payload;
     },
     setEntryList(state, action) {
@@ -33,7 +33,7 @@ const journalSlice = createSlice({
 });
 
 export const {
-  setCurrentEntryId,
+  setActiveEntryId,
   setEntryList,
   setSaveInterval,
   clearSaveInterval,

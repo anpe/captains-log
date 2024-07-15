@@ -1,10 +1,10 @@
 import { useDispatch } from "react-redux";
-import { setCurrentEntryId } from "../../stores/journalSlice";
+import { setActiveEntryId } from "../../stores/journalSlice";
 import { EntryListItem as EntryListItemType} from "../../types/entry.type";
 export default function EntryListItem({ entryListItem }: { entryListItem: EntryListItemType }) {
   const dispatch = useDispatch();
   return (
-    <li key={entryListItem.id} onClick={() => dispatch(setCurrentEntryId(entryListItem.id))}>
+    <li key={entryListItem.id} onClick={() => dispatch(setActiveEntryId(entryListItem.id))}>
       <div className="m-2 cursor-default select-none p-2 hover:rounded hover:bg-zinc-700 hover:text-white">
         <h4>
           <strong>{entryListItem.title}</strong>

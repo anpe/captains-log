@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { clearSaveInterval, setSaveInterval } from "../stores/journalSlice";
+import {
+  clearSaveInterval,
+  setActiveEntryId,
+  setSaveInterval,
+} from "../stores/journalSlice";
 import { ENTRY_SAVE_INTERVAL } from "../constants/constants";
 import { Editor, JSONContent } from "@tiptap/react";
 import { Entry as EntryType } from "../types/entry.type";
 
-export function useEntry(
-  activeEntryId: string,
-  editor: Editor | null,
-) {
+export function useEntry(activeEntryId: string, editor: Editor | null) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export function useEntry(
     };
   }, [activeEntryId]);
 
-   useEffect(() => {
+  useEffect(() => {
     loadEntry();
     return () => {
       saveEntry();
@@ -35,29 +36,43 @@ export function useEntry(
           console.log("could not parse");
         }
         editor?.commands.setContent(parsedJSON || result?.content);
+      } else {
+        console.log(`Could not find entry for id: ${activeEntryId}`);
       }
     });
   };
-  
+
   const saveEntry = () => {
-    const title = getTitle();
-    window.databaseAPI.updateEntry({
-      id: activeEntryId,
-      title: title,
-      content: JSON.stringify(editor?.getJSON()),
-    });
+    console.log(editor?.getJSON());
+    if (editor?.getJSON()) {
+      console.log("active: ", activeEntryId);
+      console.log("content: ", editor?.getJSON());
+      const title = getTitle();
+      window.databaseAPI.updateEntry({
+        id: activeEntryId,
+        title: title,
+        content: JSON.stringify(editor?.getJSON()),
+      });
+    }
+  };
+
+  const addEntry = () => {
+    window.databaseAPI
+      .addEntry(getTitle(), { data: JSON.stringify(editor?.getJSON()) })
+      .then((id) => {
+        console.log("Adding entry", id);
+        dispatch(setActiveEntryId(id));
+      });
   };
 
   const startSaveInterval = () => {
-    if (activeEntryId) {
-      dispatch(
-        setSaveInterval(
-          setInterval(() => {
-            saveEntry();
-          }, ENTRY_SAVE_INTERVAL),
-        ),
-      );
-    }
+    dispatch(
+      setSaveInterval(
+        setInterval(() => {
+          saveEntry();
+        }, ENTRY_SAVE_INTERVAL),
+      ),
+    );
   };
 
   const getTitle = () => {
@@ -71,5 +86,5 @@ export function useEntry(
     return titleTextNode?.text || "";
   };
 
-  return {getTitle, saveEntry};
+  return { getTitle, saveEntry, addEntry };
 }

@@ -1,10 +1,14 @@
 // See the Electron documentation for details on how to use preload scripts:
+import { Content } from "./types/content.type";
+
 declare global {
   interface Window {
     databaseAPI: {
       getEntryList: () => Promise<any>;
       getEntry: (id: string) => Promise<any>;
       updateEntry: (entry: EntryUpdate) => void;
+      getEntryByDate: (date: string) => Promise<any>;
+      addEntry: (title: string, content: Content) => Promise<any>;
     };
   }
 }
@@ -25,6 +29,11 @@ const databaseAPI = {
   updateEntry: (entry: EntryUpdate) => {
     return ipcRenderer.send("databaseAPI:updateEntry", entry);
   },
+  getEntryByDate: (date: string) => {
+    return ipcRenderer.invoke("databaseAPI:getEntryByDate", date);
+  },
+  addEntry: (title: string, content: Content) => {
+    return ipcRenderer.invoke("databaseAPI:addEntry", title, content);
+  },
 };
 contextBridge.exposeInMainWorld("databaseAPI", databaseAPI);
-
