@@ -33,9 +33,11 @@ export function useEntry(activeEntryId: string, editor: Editor | null) {
         try {
           parsedJSON = JSON.parse(result?.content || "");
         } catch {
-          console.log("could not parse");
+          console.log("Could not parse entry");
         }
-        editor?.commands.setContent(parsedJSON || result?.content);
+        if (result.content !== JSON.stringify(editor?.getJSON())) {
+          editor?.commands.setContent(parsedJSON || result?.content);
+        }
       } else {
         console.log(`Could not find entry for id: ${activeEntryId}`);
       }
@@ -43,10 +45,7 @@ export function useEntry(activeEntryId: string, editor: Editor | null) {
   };
 
   const saveEntry = () => {
-    console.log(editor?.getJSON());
     if (editor?.getJSON()) {
-      console.log("active: ", activeEntryId);
-      console.log("content: ", editor?.getJSON());
       const title = getTitle();
       window.databaseAPI.updateEntry({
         id: activeEntryId,
@@ -60,7 +59,6 @@ export function useEntry(activeEntryId: string, editor: Editor | null) {
     window.databaseAPI
       .addEntry(getTitle(), { data: JSON.stringify(editor?.getJSON()) })
       .then((id) => {
-        console.log("Adding entry", id);
         dispatch(setActiveEntryId(id));
       });
   };

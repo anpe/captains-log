@@ -9,6 +9,8 @@ import { getActiveEntryId, setActiveEntryId } from "../../stores/journalSlice";
 import { RootState } from "../../stores/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEntry } from "../../hooks/useEntry";
+import {useRef, useState} from "react";
+
 
 const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
   const state: RootState = useSelector((state: RootState) => state);
@@ -16,13 +18,30 @@ const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
   const DocumentWithTitle = Document.extend({
     content: "title block+",
   });
-  const dispatch = useDispatch();
+  const timeoutId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+
+  function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
+    return function(...args: Parameters<T>) {
+      clearTimeout(timeoutId.current);
+      timeoutId.current = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
+  }
 
   const Title = Heading.extend({
     name: "title",
     group: "title",
     parseHTML: () => [{ tag: "h1:first-child" }],
   }).configure({ levels: [1] });
+
+
+  const createNewEntry = debounce(function()  {
+    if (!activeEntryId) {
+      // TODO: after new entry is created and loaded, cursor moves to next line
+      addEntry();
+    }
+  }, 1000);
 
   const editor = useEditor({
     extensions: [
@@ -47,15 +66,9 @@ const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
       }),
     ],
     content: "",
-    onUpdate: ({ editor }) => {
-      if (!activeEntryId) {
-        // TODO: when typing in new title, if entry doesn't get exist
-        // the cursor skips to entry body after loading newly created entry
-        addEntry();
-      } else {
-        console.log("update", activeEntryId)
-      }
-    },
+    onUpdate:() => {
+      createNewEntry();
+    }
   });
 
   const { addEntry } = useEntry(activeEntryId, editor);
