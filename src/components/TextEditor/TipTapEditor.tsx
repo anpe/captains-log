@@ -38,7 +38,6 @@ const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
 
   const createNewEntry = debounce(function()  {
     if (!activeEntryId) {
-      // TODO: after new entry is created and loaded, cursor moves to next line
       addEntry();
     }
   }, 1000);
