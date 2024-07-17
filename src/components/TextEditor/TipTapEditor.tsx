@@ -9,8 +9,7 @@ import { getActiveEntryId, setActiveEntryId } from "../../stores/journalSlice";
 import { RootState } from "../../stores/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEntry } from "../../hooks/useEntry";
-import {useRef, useState} from "react";
-
+import { useRef, useState } from "react";
 
 const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
   const state: RootState = useSelector((state: RootState) => state);
@@ -18,16 +17,22 @@ const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
   const DocumentWithTitle = Document.extend({
     content: "title block+",
   });
-  const timeoutId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
-    return function(...args: Parameters<T>) {
+  // TODO: Need to understand this
+  const debounce = <T extends (...args: any[]) => void>(
+    func: T,
+    delay: number,
+  ): ((...args: Parameters<T>) => void) => {
+    const timeoutId = useRef<ReturnType<typeof setTimeout> | undefined>(
+      undefined,
+    );
+    return (...args: Parameters<T>) => {
       clearTimeout(timeoutId.current);
       timeoutId.current = setTimeout(() => {
-        func.apply(this, args);
+        func.apply(args);
       }, delay);
     };
-  }
+  };
 
   const Title = Heading.extend({
     name: "title",
@@ -35,8 +40,7 @@ const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
     parseHTML: () => [{ tag: "h1:first-child" }],
   }).configure({ levels: [1] });
 
-
-  const createNewEntry = debounce(function()  {
+  const createNewEntry: (this: any) => void = debounce(function () {
     if (!activeEntryId) {
       addEntry();
     }
@@ -65,9 +69,9 @@ const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
       }),
     ],
     content: "",
-    onUpdate:() => {
+    onUpdate: () => {
       createNewEntry();
-    }
+    },
   });
 
   const { addEntry } = useEntry(activeEntryId, editor);

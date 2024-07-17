@@ -11,9 +11,10 @@ export default function App() {
 
   const getTodaysDate = () => {
     const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-    const day = String(today.getDate()).padStart(2, "0");
+    // We're using UTC since that's how it's stored in the database
+    const year = today.getUTCFullYear();
+    const month = String(today.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(today.getUTCDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
