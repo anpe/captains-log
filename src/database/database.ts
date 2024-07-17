@@ -15,17 +15,17 @@ db.prepare(
   `,
 ).run();
 
-const addEntry = (title: string, content: Content): Statement => {
+const addEntry = (title: string, content: Content): number | bigint => {
   const statement = db.prepare(
     "INSERT INTO entries ( title, content) VALUES ( ?, ?)",
   );
-  statement.run(title, content?.data || "");
-  return statement;
+  const info = statement.run(title, content?.data || "");
+  return info.lastInsertRowid;
 };
 
 const getEntryList = (): EntryType[] => {
   const entryList = db
-    .prepare("SELECT id, createdOn, title FROM entries")
+    .prepare("SELECT id, createdOn, title FROM entries ORDER BY createdOn DESC")
     .all();
   return entryList as EntryType[];
 };
@@ -61,9 +61,16 @@ const updateEntry = (entry: EntryUpdate) => {
   }
 };
 
+const getEntryByDate = (date: string): EntryType => {
+  const stmt = db.prepare("SELECT * from entries WHERE DATE(createdOn) = ?");
+  const row = stmt.get(date);
+  return row as EntryType;
+};
+
 export default {
   addEntry,
   getEntryList,
   getEntry,
+  getEntryByDate,
   updateEntry,
 };

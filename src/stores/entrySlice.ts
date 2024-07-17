@@ -8,23 +8,10 @@ const initialState: EntryType[] = NavTestData;
 const entriesSlice = createSlice({
   name: "entries",
   initialState,
-  reducers: {
-    entryAdded(state, action) {
-      state.push(action.payload);
-    },
-    updateEntry(state, action) {
-      const existingEntry = state.find((entry) => {
-        return entry.id === action.payload.id;
-      });
-      if (existingEntry) {
-        existingEntry.title = action.payload.title;
-        existingEntry.content = action.payload.content;
-      }
-    },
-  },
+  reducers: {},
 });
 
-export const { entryAdded, updateEntry } = entriesSlice.actions;
+// export const {} = entriesSlice.actions;
 
 export default entriesSlice.reducer;
 

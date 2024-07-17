@@ -90,3 +90,8 @@ typings/
 
 # Electron-Forge
 out/
+.idea/.gitignore
+.idea/captains-log.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/inspectionProfiles/Project_Default.xml
