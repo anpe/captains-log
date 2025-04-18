@@ -1,23 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  clearSaveInterval,
-  setActiveEntryId,
-  setSaveInterval,
-} from "../stores/journalSlice";
-import { ENTRY_SAVE_INTERVAL } from "../constants/constants";
+import { setActiveEntryId } from "../stores/journalSlice";
 import { Editor, JSONContent } from "@tiptap/react";
 import { Entry as EntryType } from "../types/entry.type";
 
 export function useEntry(activeEntryId: string, editor: Editor | null) {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    startSaveInterval();
-    return () => {
-      dispatch(clearSaveInterval());
-    };
-  }, [activeEntryId]);
 
   useEffect(() => {
     loadEntry();
@@ -61,16 +49,6 @@ export function useEntry(activeEntryId: string, editor: Editor | null) {
       .then((id) => {
         dispatch(setActiveEntryId(id));
       });
-  };
-
-  const startSaveInterval = () => {
-    dispatch(
-      setSaveInterval(
-        setInterval(() => {
-          saveEntry();
-        }, ENTRY_SAVE_INTERVAL),
-      ),
-    );
   };
 
   const getTitle = () => {
