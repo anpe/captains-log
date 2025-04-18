@@ -24,20 +24,14 @@ export default function App() {
       .then((result: EntryType) => {
         if (result) {
           dispatch(setActiveEntryId(result.id));
-        } else {
-          // TODO create new entry and set it as active entry
-          console.log("no journal for today exists");
         }
       });
   };
+
   useEffect(() => {
     setTodaysEntry();
   }, []);
 
-  // TODO
-  // On init, check if today's entry has been created
-  // If not, create it and set it as current entry
-  // If it exists, set it as current entry
   return (
     <div id="app" className="flex h-full flex-row">
       <SideBar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}></SideBar>
