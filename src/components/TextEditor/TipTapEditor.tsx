@@ -40,9 +40,11 @@ const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
     parseHTML: () => [{ tag: "h1:first-child" }],
   }).configure({ levels: [1] });
 
-  const checkShouldCreateEntry: (this: any) => void = debounce(function () {
+  const debounceSaveEntry: (this: any) => void = debounce(function () {
     if (!activeEntryId) {
       addEntry();
+    } else {
+      saveEntry();
     }
   }, 1000);
 
@@ -70,11 +72,11 @@ const TiptapEditor = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
     ],
     content: "",
     onUpdate: () => {
-      checkShouldCreateEntry();
+      debounceSaveEntry();
     },
   });
 
-  const { addEntry } = useEntry(activeEntryId, editor);
+  const { addEntry, saveEntry } = useEntry(activeEntryId, editor);
 
   return (
     <EditorContent
